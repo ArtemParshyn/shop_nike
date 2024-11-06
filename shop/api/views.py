@@ -1,5 +1,6 @@
 import random
 
+from django.forms import model_to_dict
 from django.shortcuts import render
 
 from .models import Shoes
@@ -22,7 +23,21 @@ def index(request):
 
 
 def bag(request):
-    return render(request, 'Your bag.html')
+    count = Shoes.objects.all().count() - 4
+    a = random.randint(0, count)
+
+    items = []
+    for i in Shoes.objects.all()[a:a + 4]:
+        items.append(
+            {'name': i.name,
+             'category': i.category,
+             'discount': i.discount,
+             'price': i.price,
+             'new_price': round(i.price - (i.price / 100 * i.discount), 2),
+             'image': i.image.url}
+        )
+
+    return render(request, 'Your bag.html', context={'items': items})
 
 
 def item_detail(request, item_id):
@@ -52,9 +67,30 @@ def item_detail(request, item_id):
              'new_price': round(i.price - (i.price / 100 * i.discount), 2),
              'image': i.image.url}
         )
+    # преобразование в словарь
+
     object = Shoes.objects.get(name=item_id)
-    return render(request, 'item.html', context={'item': object,
-                                                 'item_new_price': round(object.price - (object.price / 100 * object.discount), 2),
+    item_dict = {
+        'id': object.id,
+        'category': object.category,
+        'material': object.material,
+        'lining': object.lining,
+        'insole': object.insole,
+        'sole': object.sole,
+        'name': object.name,
+        'price': object.price,
+        'image': object.image.url,
+        'discount': object.discount,
+        'fabric': object.fabric,
+        'fastening': object.fastening,
+        'qualities': object.qualities,
+        'shoetip': object.shoetip
+
+                # Добавьте другие нужные поля
+    }
+    return render(request, 'item.html', context={'item': item_dict,
+                                                 'item_new_price': round(
+                                                     object.price - (object.price / 100 * object.discount), 2),
                                                  'items': items,
                                                  'items_2': items_2,
                                                  })

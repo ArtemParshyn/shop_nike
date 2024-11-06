@@ -9,8 +9,12 @@ class Shoes(models.Model):
     discount = models.IntegerField(default=0, blank=True)  # Заменил default на число
     material = models.CharField(max_length=64, blank=True, default="")  # Пустая строка по умолчанию
     lining = models.CharField(max_length=64, blank=True, default="")  # Пустая строка по умолчанию
+    fabric = models.CharField(max_length=64, blank=True, default="")  # Пустая строка по умолчанию
+    fastening = models.CharField(max_length=64, blank=True, default="")  # Пустая строка по умолчанию
+    shoetip = models.CharField(max_length=64, blank=True, default="")  # Пустая строка по умолчанию
     insole = models.CharField(max_length=64, blank=True, default="")  # Пустая строка по умолчанию
     sole = models.CharField(max_length=64, blank=True, default="")  # Пустая строка по умолчанию
+    qualities = models.CharField(max_length=64, blank=True, default="")  # Пустая строка по умолчанию
 
     def __str__(self):
         return self.name
