@@ -1,6 +1,5 @@
 import random
-
-from django.forms import model_to_dict
+from django.http import JsonResponse
 from django.shortcuts import render
 
 from .models import Shoes
@@ -86,7 +85,7 @@ def item_detail(request, item_id):
         'qualities': object.qualities,
         'shoetip': object.shoetip
 
-                # Добавьте другие нужные поля
+        # Добавьте другие нужные поля
     }
     return render(request, 'item.html', context={'item': item_dict,
                                                  'item_new_price': round(
@@ -94,3 +93,9 @@ def item_detail(request, item_id):
                                                  'items': items,
                                                  'items_2': items_2,
                                                  })
+
+
+def items(request):
+    # Преобразуем объекты модели Shoes в формат, пригодный для JSON
+    shoes_data = list(Shoes.objects.values())
+    return JsonResponse({"items": shoes_data})
