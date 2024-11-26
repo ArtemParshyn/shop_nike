@@ -96,6 +96,5 @@ def item_detail(request, item_id):
 
 
 def items(request):
-    # Преобразуем объекты модели Shoes в формат, пригодный для JSON
     shoes_data = list(Shoes.objects.values())
     return JsonResponse({"items": shoes_data})
