@@ -18,6 +18,7 @@ def index(request):
              'new_price': round(i.price - (i.price / 100 * i.discount), 2),
              'image': i.image.url}
         )
+    print(items)
     return render(request, 'main.html', context={'items': items})
 
 
